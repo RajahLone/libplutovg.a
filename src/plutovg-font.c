@@ -194,12 +194,12 @@ static void plutovg_glyph_cache_finish(plutovg_glyph_cache_t* cache, plutovg_fon
             while(glyph) {
                 plutovg_glyph_t* next = glyph->next;
                 stbtt_FreeShape(&face->info, glyph->vertices);
-                ldg_Free(glyph);
+                free(glyph);
                 glyph = next;
             }
         }
 
-        ldg_Free(cache->glyphs);
+        free(cache->glyphs);
         cache->glyphs = NULL;
         cache->capacity = 0;
         cache->size = 0;
@@ -216,7 +216,7 @@ static plutovg_glyph_t* plutovg_glyph_cache_get(plutovg_glyph_cache_t* cache, pl
 
     if(cache->glyphs == NULL) {
         assert(cache->size == 0);
-        cache->glyphs = ldg_Calloc(GLYPH_CACHE_INIT_CAPACITY, sizeof(plutovg_glyph_t*));
+        cache->glyphs = calloc(GLYPH_CACHE_INIT_CAPACITY, sizeof(plutovg_glyph_t*));
         cache->capacity = GLYPH_CACHE_INIT_CAPACITY;
     }
 
@@ -227,7 +227,7 @@ static plutovg_glyph_t* plutovg_glyph_cache_get(plutovg_glyph_cache_t* cache, pl
     }
 
     if(glyph == NULL) {
-        glyph = ldg_Malloc(sizeof(plutovg_glyph_t));
+        glyph = malloc(sizeof(plutovg_glyph_t));
         glyph->codepoint = codepoint;
         glyph->index = stbtt_FindGlyphIndex(&face->info, codepoint);
         glyph->nvertices = stbtt_GetGlyphShape(&face->info, glyph->index, &glyph->vertices);
@@ -242,7 +242,7 @@ static plutovg_glyph_t* plutovg_glyph_cache_get(plutovg_glyph_cache_t* cache, pl
 
         if(cache->size > (cache->capacity * 3 / 4)) {
             size_t newcapacity = cache->capacity << 1;
-            plutovg_glyph_t** newglyphs = ldg_Calloc(newcapacity, sizeof(plutovg_glyph_t*));
+            plutovg_glyph_t** newglyphs = calloc(newcapacity, sizeof(plutovg_glyph_t*));
 
             for(size_t i = 0; i < cache->capacity; ++i) {
                 plutovg_glyph_t* entry = cache->glyphs[i];
@@ -255,7 +255,7 @@ static plutovg_glyph_t* plutovg_glyph_cache_get(plutovg_glyph_cache_t* cache, pl
                 }
             }
 
-            ldg_Free(cache->glyphs);
+            free(cache->glyphs);
             cache->glyphs = newglyphs;
             cache->capacity = newcapacity;
         }
@@ -279,7 +279,7 @@ plutovg_font_face_t* plutovg_font_face_load_from_file(const char* filename, int 
         return NULL;
     }
 
-    void* data = ldg_Malloc(length);
+    void* data = malloc(length);
     if(data == NULL) {
         fclose(fp);
         return NULL;
@@ -290,11 +290,11 @@ plutovg_font_face_t* plutovg_font_face_load_from_file(const char* filename, int 
     fclose(fp);
 
     if(nread != length) {
-        ldg_Free(data);
+        free(data);
         return NULL;
     }
 
-    return plutovg_font_face_load_from_data(data, length, ttcindex, (plutovg_destroy_func_t)ldg_Free, data);
+    return plutovg_font_face_load_from_data(data, length, ttcindex, free, data);
 }
 
 plutovg_font_face_t* plutovg_font_face_load_from_data(const void* data, unsigned int length, int ttcindex, plutovg_destroy_func_t destroy_func, void* closure)
@@ -307,7 +307,7 @@ plutovg_font_face_t* plutovg_font_face_load_from_data(const void* data, unsigned
         return NULL;
     }
 
-    plutovg_font_face_t* face = ldg_Malloc(sizeof(plutovg_font_face_t));
+    plutovg_font_face_t* face = malloc(sizeof(plutovg_font_face_t));
     plutovg_init_reference(face);
     face->info = info;
     stbtt_GetFontVMetrics(&face->info, &face->ascent, &face->descent, &face->line_gap);
@@ -332,7 +332,7 @@ void plutovg_font_face_destroy(plutovg_font_face_t* face)
         plutovg_mutex_destroy(&face->mutex);
         if(face->destroy_func)
             face->destroy_func(face->closure);
-        ldg_Free(face);
+        free(face);
     }
 }
 
@@ -527,7 +527,7 @@ struct plutovg_font_face_cache {
 
 plutovg_font_face_cache_t* plutovg_font_face_cache_create(void)
 {
-    plutovg_font_face_cache_t* cache = ldg_Malloc(sizeof(plutovg_font_face_cache_t));
+    plutovg_font_face_cache_t* cache = malloc(sizeof(plutovg_font_face_cache_t));
     plutovg_init_reference(cache);
     plutovg_mutex_init(&cache->mutex);
     cache->entries = NULL;
@@ -548,7 +548,7 @@ void plutovg_font_face_cache_destroy(plutovg_font_face_cache_t* cache)
     if(plutovg_destroy_reference(cache)) {
         plutovg_font_face_cache_reset(cache);
         plutovg_mutex_destroy(&cache->mutex);
-        ldg_Free(cache);
+        free(cache);
     }
 }
 
@@ -566,12 +566,12 @@ void plutovg_font_face_cache_reset(plutovg_font_face_cache_t* cache)
         do {
             plutovg_font_face_entry_t* next = entry->next;
             plutovg_font_face_destroy(entry->face);
-            ldg_Free(entry);
+            free(entry);
             entry = next;
         } while(entry);
     }
 
-    ldg_Free(cache->entries);
+    free(cache->entries);
     cache->entries = NULL;
     cache->size = 0;
     cache->capacity = 0;
@@ -610,7 +610,7 @@ void plutovg_font_face_cache_add(plutovg_font_face_cache_t* cache, const char* f
     if(family == NULL) family = "";
     size_t family_length = strlen(family) + 1;
 
-    plutovg_font_face_entry_t* entry = ldg_Malloc(family_length + sizeof(plutovg_font_face_entry_t));
+    plutovg_font_face_entry_t* entry = malloc(family_length + sizeof(plutovg_font_face_entry_t));
     entry->face = plutovg_font_face_reference(face);
     entry->family = (char*)(entry + 1);
     memcpy(entry->family, family, family_length);
@@ -827,7 +827,7 @@ int plutovg_font_face_cache_load_file(plutovg_font_face_cache_t* cache, const ch
         size_t filename_length = strlen(filename) + 1;
         size_t max_family_length = (unicode_family_name ? 3 * (family_length / 2) : family_length * 3) + 1;
 
-        plutovg_font_face_entry_t* entry = ldg_Malloc(max_family_length + filename_length + sizeof(plutovg_font_face_entry_t));
+        plutovg_font_face_entry_t* entry = malloc(max_family_length + filename_length + sizeof(plutovg_font_face_entry_t));
         entry->family = (char*)(entry + 1);
         entry->filename = entry->family + max_family_length;
         memcpy(entry->filename, filename, filename_length);

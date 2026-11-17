@@ -9,9 +9,6 @@ fdlibm can be downloaded on th-otto [repo](https://tho-otto.m68k.eu/crossmint.ph
 
 ## customization
 
-- The malloc/calloc/free functions are replaced by ldg_Malloc/Calloc/Free equivalent to secure stability under MagiC. 
-A large amount of Mallocs are made, so it's not safe under monoTOS.
-
 - Export is disabled for all images files format. Work is supposed to be done in memory only.
 
 # installation for makefiles

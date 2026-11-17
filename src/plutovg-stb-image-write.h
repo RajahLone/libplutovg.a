@@ -225,13 +225,13 @@ STBIWDEF void stbi_flip_vertically_on_write(int flip_boolean);
 #endif
 
 #ifndef STBIW_MALLOC
-#define STBIW_MALLOC(sz)              ldg_Malloc(sz)
-#define STBIW_REALLOC(p,oldsz,newsz)  ldg_Realloc(p,oldsz,newsz)
-#define STBIW_FREE(p)                 ldg_Free(p)
+#define STBIW_MALLOC(sz)        malloc(sz)
+#define STBIW_REALLOC(p,newsz)  realloc(p,newsz)
+#define STBIW_FREE(p)           free(p)
 #endif
 
 #ifndef STBIW_REALLOC_SIZED
-#define STBIW_REALLOC_SIZED(p,oldsz,newsz) STBIW_REALLOC(p,oldsz,newsz)
+#define STBIW_REALLOC_SIZED(p,oldsz,newsz) STBIW_REALLOC(p,newsz)
 #endif
 
 

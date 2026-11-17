@@ -679,13 +679,13 @@ typedef unsigned char validate_uint32[sizeof(stbi__uint32)==4 ? 1 : -1];
 #endif
 
 #ifndef STBI_MALLOC
-#define STBI_MALLOC(sz)                 ldg_Malloc(sz)
-#define STBI_REALLOC(p,oldsz,newsz)     ldg_Realloc(p,oldsz,newsz)
-#define STBI_FREE(p)                    ldg_Free(p)
+#define STBI_MALLOC(sz)           malloc(sz)
+#define STBI_REALLOC(p,newsz)     realloc(p,newsz)
+#define STBI_FREE(p)              free(p)
 #endif
 
 #ifndef STBI_REALLOC_SIZED
-#define STBI_REALLOC_SIZED(p,oldsz,newsz) STBI_REALLOC(p,oldsz,newsz)
+#define STBI_REALLOC_SIZED(p,oldsz,newsz) STBI_REALLOC(p,newsz)
 #endif
 
 // x86/x64 detection

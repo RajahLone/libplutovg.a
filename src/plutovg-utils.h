@@ -9,8 +9,6 @@
 #include <float.h>
 #include <math.h>
 
-#include <ldg.h>
-
 #define PLUTOVG_IS_NUM(c) ((c) >= '0' && (c) <= '9')
 #define PLUTOVG_IS_ALPHA(c) (((c) >= 'a' && (c) <= 'z') || ((c) >= 'A' && (c) <= 'Z'))
 #define PLUTOVG_IS_ALNUM(c) (PLUTOVG_IS_ALPHA(c) || PLUTOVG_IS_NUM(c))

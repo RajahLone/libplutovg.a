@@ -1,7 +1,6 @@
 #include "plutovg-private.h"
 #include "plutovg-utils.h"
 
-
 int plutovg_version(void)
 {
     return PLUTOVG_VERSION;
@@ -16,7 +15,7 @@ const char* plutovg_version_string(void)
 
 static plutovg_state_t* plutovg_state_create(void)
 {
-    plutovg_state_t* state = ldg_Malloc(sizeof(plutovg_state_t));
+    plutovg_state_t* state = malloc(sizeof(plutovg_state_t));
     state->paint = NULL;
     state->font_face = NULL;
     state->color = PLUTOVG_BLACK_COLOR;
@@ -77,12 +76,12 @@ static void plutovg_state_destroy(plutovg_state_t* state)
     plutovg_font_face_destroy(state->font_face);
     plutovg_array_destroy(state->stroke.dash.array);
     plutovg_span_buffer_destroy(&state->clip_spans);
-    ldg_Free(state);
+    free(state);
 }
 
 plutovg_canvas_t* plutovg_canvas_create(plutovg_surface_t* surface)
 {
-    plutovg_canvas_t* canvas = ldg_Malloc(sizeof(plutovg_canvas_t));
+    plutovg_canvas_t* canvas = malloc(sizeof(plutovg_canvas_t));
     plutovg_init_reference(canvas);
     canvas->surface = plutovg_surface_reference(surface);
     canvas->path = plutovg_path_create();
@@ -121,7 +120,7 @@ void plutovg_canvas_destroy(plutovg_canvas_t* canvas)
         plutovg_span_buffer_destroy(&canvas->clip_spans);
         plutovg_surface_destroy(canvas->surface);
         plutovg_path_destroy(canvas->path);
-        ldg_Free(canvas);
+        free(canvas);
     }
 }
 

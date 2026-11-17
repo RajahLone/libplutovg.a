@@ -1,3 +1,4 @@
+CMINI = ../../libcmini/include
 
 CROSSPREFIX=/opt/cross-mint/bin/m68k-atari-mint-
 PATH = /opt/cross-mint/m68k-atari-mint/bin:/opt/cross-mint/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
@@ -11,11 +12,12 @@ RANLIB = $(CROSSPREFIX)ranlib
 STRIP = $(CROSSPREFIX)strip
 FLAGS = $(CROSSPREFIX)flags
 
-CFLAGS = -I../include -I. -W
+CFLAGS = -W -I../include -I. -I$(CMINI)
 
-OFLAGS = -Wall -O2 -fomit-frame-pointer -Wno-sign-compare -Wno-unused-function -Wno-unused-parameter -Wno-cast-function-type \
-         -DPLUTOVG_BUILD -DPLUTOVG_BUILD_STATIC  -DPLUTOVG_DISABLE_IMAGE_WRITE -DPLUTOVG_DISABLE_FONT_FACE_CACHE_LOAD \
-         -DSTBI_NO_JPEG -DSTBI_NO_PNG -DSTBI_NO_BMP -DSTBI_NO_PSD -DSTBI_NO_TGA -DSTBI_NO_GIF -DSTBI_NO_HDR -DSTBI_NO_PIC -DSTBI_NO_PNM
+OFLAGS = -Wall -O2 -fomit-frame-pointer -Wno-sign-compare -Wno-unused-function -Wno-unused-parameter \
+         -DPLUTOVG_BUILD -DPLUTOVG_BUILD_STATIC \
+         -DSTBI_NO_JPEG -DSTBI_NO_PNG -DSTBI_NO_BMP -DSTBI_NO_PSD -DSTBI_NO_TGA -DSTBI_NO_GIF -DSTBI_NO_HDR -DSTBI_NO_PIC -DSTBI_NO_PNM \
+         -DPLUTOVG_DISABLE_IMAGE_WRITE -DPLUTOVG_DISABLE_FONT_FACE_CACHE_LOAD
 
 OBJS = plutovg-blend.c \
        plutovg-canvas.c \

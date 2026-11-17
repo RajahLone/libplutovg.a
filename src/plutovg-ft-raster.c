@@ -58,8 +58,6 @@
 #include "plutovg-ft-raster.h"
 #include "plutovg-ft-math.h"
 
-#include <ldg.h>
-
 #include <setjmp.h>
 
 #define pvg_ft_setjmp   setjmp
@@ -1884,14 +1882,14 @@ void PVG_FT_Outline_Get_CBox(const PVG_FT_Outline* outline, PVG_FT_BBox* acbox)
           length *= 2;
           if(length > PVG_FT_MAXIMUM_POOL_SIZE)
               break;
-          void* heap = ldg_Malloc(length);
+          void* heap = malloc(length);
           if(heap == NULL)
               break;
           if(worker.skip_spans < 0)
               rendered_spans += -worker.skip_spans;
           worker.skip_spans = rendered_spans;
           error = gray_raster_render(&worker, heap, length, params);
-          ldg_Free(heap);
+          free(heap);
       }
   }
 

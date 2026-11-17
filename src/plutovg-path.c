@@ -37,7 +37,7 @@ plutovg_path_command_t plutovg_path_iterator_next(plutovg_path_iterator_t* it, p
 
 plutovg_path_t* plutovg_path_create(void)
 {
-    plutovg_path_t* path = ldg_Malloc(sizeof(plutovg_path_t));
+    plutovg_path_t* path = malloc(sizeof(plutovg_path_t));
     plutovg_init_reference(path);
     path->num_points = 0;
     path->num_contours = 0;
@@ -57,7 +57,7 @@ void plutovg_path_destroy(plutovg_path_t* path)
 {
     if(plutovg_destroy_reference(path)) {
         plutovg_array_destroy(path->elements);
-        ldg_Free(path);
+        free(path);
     }
 }
 

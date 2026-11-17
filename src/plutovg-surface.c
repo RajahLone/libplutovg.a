@@ -17,7 +17,7 @@ static plutovg_surface_t* plutovg_surface_create_uninitialized(size_t width, siz
     if(width <= 0 || height <= 0 || width >= kMaxSize || height >= kMaxSize)
         return NULL;
     const size_t size = width * height * 4;
-    plutovg_surface_t* surface = ldg_Malloc(size + sizeof(plutovg_surface_t));
+    plutovg_surface_t* surface = malloc(size + sizeof(plutovg_surface_t));
     if(surface == NULL)
         return NULL;
     plutovg_init_reference(surface);
@@ -38,7 +38,7 @@ plutovg_surface_t* plutovg_surface_create(int width, int height)
 
 plutovg_surface_t* plutovg_surface_create_for_data(unsigned char* data, int width, int height, int stride)
 {
-    plutovg_surface_t* surface = ldg_Malloc(sizeof(plutovg_surface_t));
+    plutovg_surface_t* surface = malloc(sizeof(plutovg_surface_t));
     plutovg_init_reference(surface);
     surface->width = width;
     surface->height = height;
@@ -105,7 +105,7 @@ plutovg_surface_t* plutovg_surface_load_from_image_base64(const char* data, int 
 
     if(length == -1)
         length = strlen(data);
-    output_data = ldg_Malloc(length);
+    output_data = malloc(length);
     if(output_data == NULL)
         return NULL;
     for(int i = 0; i < length; ++i) {
@@ -146,7 +146,7 @@ plutovg_surface_t* plutovg_surface_load_from_image_base64(const char* data, int 
 
     surface = plutovg_surface_load_from_image_data(output_data, output_length);
 cleanup:
-    ldg_Free(output_data);
+    free(output_data);
     return surface;
 }
 
@@ -159,7 +159,7 @@ plutovg_surface_t* plutovg_surface_reference(plutovg_surface_t* surface)
 void plutovg_surface_destroy(plutovg_surface_t* surface)
 {
     if(plutovg_destroy_reference(surface)) {
-        ldg_Free(surface);
+        free(surface);
     }
 }
 

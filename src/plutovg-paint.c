@@ -1,7 +1,7 @@
 #include "plutovg-private.h"
 #include "plutovg-utils.h"
 
-//#include <ctype.h>
+#include <ctype.h>
 
 void plutovg_color_init_rgb(plutovg_color_t* color, float r, float g, float b)
 {
@@ -384,7 +384,7 @@ int plutovg_color_parse(plutovg_color_t* color, const char* data, int length)
 
 static void* plutovg_paint_create(plutovg_paint_type_t type, size_t size)
 {
-    plutovg_paint_t* paint = ldg_Malloc(size);
+    plutovg_paint_t* paint = malloc(size);
     plutovg_init_reference(paint);
     paint->type = type;
     return paint;
@@ -479,7 +479,7 @@ void plutovg_paint_destroy(plutovg_paint_t* paint)
             plutovg_surface_destroy(texture->surface);
         }
 
-        ldg_Free(paint);
+        free(paint);
     }
 }
 
